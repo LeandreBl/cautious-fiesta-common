@@ -44,7 +44,9 @@ const std::string &Asset::getFileName() const noexcept
 	return _filename;
 }
 
-uint32_t Asset::computeChksum(const std::string &filename) const noexcept
+namespace common
+{
+uint32_t computeChksum(const std::string &filename) noexcept
 {
 	std::ifstream file;
 	char buffer[4096];
@@ -61,5 +63,5 @@ uint32_t Asset::computeChksum(const std::string &filename) const noexcept
 	} while (rd == sizeof(buffer));
 	return chk;
 }
-
+} // namespace common
 } // namespace cf

@@ -13,11 +13,14 @@ class Asset
 	const std::string &getFileName() const noexcept;
 	uint32_t getChksum() const noexcept;
 
-	uint32_t computeChksum(const std::string &filename) const noexcept;
 
       private:
 	uint64_t _filesize;
 	uint32_t _chksum;
 	std::string _filename;
 };
+namespace common
+{
+uint32_t computeChksum(const std::string &filename) noexcept;
+} // namespace common
 } // namespace cf
