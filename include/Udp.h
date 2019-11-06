@@ -48,7 +48,7 @@ class UdpPrctl
 	};
 
 	enum class objType {
-		PLAYER,
+		PLAYER = 0,
 		WALL,
 	};
 
@@ -59,10 +59,19 @@ class UdpPrctl
 	};
 
 	enum class inputType {
-
+		UNKNOWN_KEY = 0,
+		PRESSED,
+		RELEASED,
+		LEFT,
+		RIGHT,
+		UP,
+		DOWN,
+		ATTACK1,
+		ATTACK2
 	};
 
 	struct udpInput {
+		int32_t action;
 		int32_t type;
 		// extra data depending on type
 	};
