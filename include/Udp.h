@@ -59,15 +59,15 @@ class UdpPrctl
 	};
 
 	enum class inputType {
-		UNKNOWN_KEY = 0,
-		PRESSED,
-		RELEASED,
-		LEFT,
-		RIGHT,
+		UNKNOWN_KEY = -1,
+		ATTACK1 = 0,
+		ATTACK2,
 		UP,
+		LEFT,
 		DOWN,
-		ATTACK1,
-		ATTACK2
+		RIGHT,
+		PRESSED,
+		RELEASED
 	};
 
 	struct udpInput {

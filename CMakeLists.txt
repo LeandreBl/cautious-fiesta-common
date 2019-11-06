@@ -24,8 +24,9 @@ set(CMAKE_CXX_FLAGS_DEBUG "-O3 -g3 -Wall -Wextra -Weffc++ -Wshadow -Wold-style-c
 set(CMAKE_CXX_FLAGS_RELEASE "-Wall -g3 -Wextra -O3 -fsanitize=address")
 
 add_subdirectory(sfml-scene)
+add_subdirectory(discord-rpc)
 
 add_library(${LIB_NAME} SHARED ${SRCS} ${HDRS})
 set_target_properties(${LIB_NAME} PROPERTIES VERSION ${PROJECT_VERSION})
-target_include_directories(${LIB_NAME} PRIVATE ${HDRS} "sfml-scene/include")
+target_include_directories(${LIB_NAME} PRIVATE ${HDRS} "sfml-scene/include" "discord-rpc/include")
 target_link_libraries(${LIB_NAME} asan stdc++fs sfml-system sfml-graphics stdc++fs sfml-scene)
