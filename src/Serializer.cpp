@@ -110,6 +110,16 @@ bool Serializer::set(const TcpPrctl &header) noexcept
 	return nativeSet(data);
 }
 
+bool Serializer::set(const sf::Color &color) noexcept
+{
+	return nativeSet(color.r) && nativeSet(color.g) && nativeSet(color.b) && nativeSet(color.a);
+}
+
+bool Serializer::get(sf::Color &color) noexcept
+{
+	return get(color.r) && get(color.g) && get(color.b) && get(color.a);
+}
+
 bool Serializer::get(std::string &str) noexcept
 {
 	size_t len;

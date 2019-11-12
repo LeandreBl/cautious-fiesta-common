@@ -33,6 +33,7 @@ class Serializer
 	bool set(const sf::Vector2f &v) noexcept;
 	bool set(const sfs::Sprite &sprite) noexcept;
 	bool set(const sfs::Velocity &velocity) noexcept;
+	bool set(const sf::Color &color) noexcept;
 	template <typename T> bool set(const std::vector<T> &vec)
 	{
 		if (!nativeSet(vec.size()))
@@ -52,6 +53,7 @@ class Serializer
 	bool get(sf::Vector2f &v) noexcept;
 	bool get(sfs::Sprite &sprite) noexcept;
 	bool get(sfs::Velocity &velocity) noexcept;
+	bool get(sf::Color &color) noexcept;
 	template <typename T> bool get(T &dest) noexcept
 	{
 		return get(&dest, sizeof(dest));
