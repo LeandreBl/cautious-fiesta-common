@@ -4,23 +4,13 @@
 
 #include <SFML/System.hpp>
 
-namespace cf
-{
+namespace cf {
 
 constexpr uint16_t UDP_MAGIC = 0x0b3a;
 
-class UdpPrctl
-{
+class UdpPrctl {
       public:
-	enum class Type {
-		POSITION,
-		VELOCITY,
-		SPRITE,
-		SPAWN,
-		INPUT,
-		TIME,
-		UNKNOWN
-	};
+	enum class Type { POSITION, VELOCITY, SPRITE, SPAWN, INPUT, TIME, UNKNOWN };
 
 	struct udpHeader {
 		uint32_t type;   // packet type
@@ -100,7 +90,8 @@ class UdpPrctl
 		uint32_t objectIndex;
 	};
 
-	UdpPrctl(Type type, uint32_t length, uint16_t index) noexcept;
+	UdpPrctl(Type type = Type::UNKNOWN, uint32_t length = 0, uint16_t index = 0) noexcept;
+	UdpPrctl(const udpHeader &header) noexcept;
 	bool isCorrect() const noexcept;
 	Type getType() const noexcept;
 	uint32_t getLength() const noexcept;
