@@ -2,6 +2,8 @@
 
 #include <cstdint>
 
+#include <iostream>
+
 #include <SFML/System.hpp>
 
 namespace cf {
@@ -10,7 +12,16 @@ constexpr uint16_t UDP_MAGIC = 0x0b3a;
 
 class UdpPrctl {
       public:
-	enum class Type { POSITION, VELOCITY, SPRITE, SPAWN, INPUT, TIME, UNKNOWN };
+	enum class Type {
+		POSITION,
+		VELOCITY,
+		SPRITE,
+		SPAWN,
+		INPUT,
+		TIME,
+		UNKNOWN,
+		ACK /* this should stay last */
+	};
 
 	struct udpHeader {
 		uint32_t type;   // packet type
@@ -102,4 +113,7 @@ class UdpPrctl {
       protected:
 	udpHeader _header;
 };
+
+std::ostream &operator<<(std::ostream &os, UdpPrctl::Type type) noexcept;
+
 } // namespace cf
