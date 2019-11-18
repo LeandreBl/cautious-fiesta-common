@@ -61,12 +61,12 @@ class UdpPrctl {
 
 	enum class inputType {
 		UNKNOWN_KEY = -1,
-		UP = 0,
+		ATTACK1 = 0,
+		ATTACK2,
+		UP,
 		LEFT,
 		DOWN,
 		RIGHT,
-		ATTACK1,
-		ATTACK2,
 	};
 	enum class inputAction { PRESSED = 0, RELEASED };
 
