@@ -12,19 +12,16 @@
 
 #include "Asset.hpp"
 #include "Tcp.hpp"
-#include "Udp.h"
+#include "Udp.hpp"
 
-namespace cf
-{
-class Serializer
-{
+namespace cf {
+class Serializer {
       public:
 	Serializer() noexcept;
 	~Serializer() noexcept;
 	Serializer(const Serializer &packet) noexcept;
 	Serializer(const Serializer &packet, TcpPrctl::Type type) noexcept;
-	Serializer(const Serializer &packet, UdpPrctl::Type type,
-		   uint16_t index) noexcept;
+	Serializer(const Serializer &packet, UdpPrctl::Type type, uint16_t index) noexcept;
 	void clear() noexcept;
 	void setHeader(TcpPrctl::Type type) noexcept;
 	bool set(const std::string &str) noexcept;

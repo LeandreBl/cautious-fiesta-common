@@ -61,20 +61,19 @@ class UdpPrctl {
 
 	enum class inputType {
 		UNKNOWN_KEY = -1,
-		ATTACK1 = 0,
-		ATTACK2,
-		UP,
+		UP = 0,
 		LEFT,
 		DOWN,
 		RIGHT,
-		PRESSED,
-		RELEASED
+		ATTACK1,
+		ATTACK2,
 	};
+	enum class inputAction { PRESSED = 0, RELEASED };
 
 	struct udpInput {
 		int32_t action;
 		int32_t type;
-		// extra data depending on type
+		// extra data depending on type and/or action
 	};
 
 	enum class timeType {
@@ -114,6 +113,8 @@ class UdpPrctl {
 	udpHeader _header;
 };
 
-std::ostream &operator<<(std::ostream &os, UdpPrctl::Type type) noexcept;
+const char *toString(UdpPrctl::inputType type) noexcept;
+const char *toString(UdpPrctl::inputAction action) noexcept;
+const char *toString(UdpPrctl::Type type) noexcept;
 
 } // namespace cf
