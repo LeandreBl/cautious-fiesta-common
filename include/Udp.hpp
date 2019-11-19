@@ -5,6 +5,7 @@
 #include <iostream>
 
 #include <SFML/System.hpp>
+#include <SFML/Graphics.hpp>
 
 namespace cf {
 
@@ -48,6 +49,22 @@ class UdpPrctl {
 		float rotation;
 	};
 
+	enum class weaponType {
+		NONE = -1,
+	};
+
+	struct udpPlayerObject {
+		size_t nameLen;
+		char *name;
+		float life;
+		float speed;
+		float attack;
+		float attackSpeed;
+		float armor;
+		sf::Color color;
+		int32_t weaponType;
+	};
+
 	enum class objType {
 		PLAYER = 0,
 		WALL,
@@ -55,7 +72,6 @@ class UdpPrctl {
 
 	struct udpSpawnObject {
 		int32_t type;
-		uint32_t customIndex;
 		// extra data depending on type
 	};
 
