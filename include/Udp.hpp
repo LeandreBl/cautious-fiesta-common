@@ -20,6 +20,9 @@ class UdpPrctl {
 		SPAWN,
 		INPUT,
 		TIME,
+		STATE,
+		DESTROY,
+		ATTACK,
 		UNKNOWN,
 		ACK /* this should stay last */
 	};
@@ -32,18 +35,18 @@ class UdpPrctl {
 	} __attribute__((packed));
 
 	struct udpPosition {
-		uint32_t objectIndex;
+		uint64_t objectId;
 		sf::Vector2f position;
 	};
 
 	struct udpVelocity {
-		uint32_t objectIndex;
+		uint64_t objectId;
 		sf::Vector2f speed;
 		sf::Vector2f acceleration;
 	};
 
 	struct udpSprite {
-		uint32_t objectIndex;
+		uint64_t objectId;
 		sf::Vector2f offset;
 		sf::Vector2f scale;
 		float rotation;
@@ -51,6 +54,10 @@ class UdpPrctl {
 
 	enum class weaponType {
 		NONE = -1,
+		DAGGER = 0,
+		GUN,
+		SPEAR,
+		SWORD,
 	};
 
 	struct udpPlayerObject {
@@ -62,6 +69,8 @@ class UdpPrctl {
 		float attackSpeed;
 		float armor;
 		sf::Color color;
+		size_t spriteLen;
+		char *spriteName;
 		int32_t weaponType;
 	};
 
@@ -72,6 +81,7 @@ class UdpPrctl {
 
 	struct udpSpawnObject {
 		int32_t type;
+		uint64_t objectId;
 		// extra data depending on type
 	};
 
@@ -108,12 +118,18 @@ class UdpPrctl {
 
 	struct udpSetState {
 		int32_t type;
-		uint32_t objectIndex;
+		uint64_t objectId;
 		// extra data depending on type;
 	};
 
 	struct udpDestroy {
-		uint32_t objectIndex;
+		uint64_t objectId;
+	};
+
+	enum class attackType { DEFAULT = 0, SPECIAL };
+
+	struct udpAttack {
+		int32_t attackType;
 	};
 
 	UdpPrctl(Type type = Type::UNKNOWN, uint32_t length = 0, uint16_t index = 0) noexcept;
