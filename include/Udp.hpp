@@ -122,7 +122,13 @@ class UdpPrctl {
 		// extra data depending on type;
 	};
 
+	enum class destroyType {
+		GAMEOBJECT = 0,
+		COMPONENT,
+	};
+
 	struct udpDestroy {
+		int32_t type;
 		uint64_t objectId;
 	};
 

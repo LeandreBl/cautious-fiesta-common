@@ -3,8 +3,8 @@
 namespace cf {
 
 static const char *TYPE_STRINGS[] = {
-	"Udp::Position", "Udp::Velocity", "Udp::Sprite",  "Udp::Spawn",
-	"Udp::Input",    "Udp::Time",     "Udp::Unknown", "Udp::Ack",
+	"Udp::Position", "Udp::Velocity", "Udp::Sprite", "Udp::Spawn",   "Udp::Input", "Udp::Time",
+	"Udp::State",    "Udp::Destroy",  "Udp::Attack", "Udp::Unknown", "Udp::Ack",
 };
 
 static const char *INPUT_TYPES_STRINGS[] = {
