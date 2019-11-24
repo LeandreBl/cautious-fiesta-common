@@ -18,10 +18,11 @@ namespace cf {
 class Serializer {
       public:
 	Serializer() noexcept;
-	~Serializer() noexcept;
+	Serializer(UdpPrctl &header) noexcept;
 	Serializer(const Serializer &packet) noexcept;
 	Serializer(const Serializer &packet, TcpPrctl::Type type) noexcept;
 	Serializer(const Serializer &packet, UdpPrctl::Type type, uint16_t index) noexcept;
+	~Serializer() noexcept;
 	void clear() noexcept;
 	void setHeader(TcpPrctl::Type type) noexcept;
 	bool set(const std::string &str) noexcept;

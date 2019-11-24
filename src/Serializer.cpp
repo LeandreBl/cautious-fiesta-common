@@ -3,9 +3,11 @@
 
 #include "Serializer.hpp"
 
-namespace cf
-{
-Serializer::Serializer() noexcept : _data(nullptr), _size(0), _alloc_size(0)
+namespace cf {
+Serializer::Serializer() noexcept
+	: _data(nullptr)
+	, _size(0)
+	, _alloc_size(0)
 {
 }
 
@@ -14,17 +16,22 @@ Serializer::~Serializer() noexcept
 	delete[] _data;
 }
 
+Serializer::Serializer(UdpPrctl &header) noexcept
+	: Serializer()
+{
+	nativeSet(header);
+}
+
 Serializer::Serializer(const Serializer &packet, TcpPrctl::Type type) noexcept
-    : _data(nullptr), _size(0), _alloc_size(0)
+	: Serializer()
 {
 	TcpPrctl header(type, packet._size);
 	nativeSet(header);
 	nativeSet(packet._data, packet._size);
 }
 
-Serializer::Serializer(const Serializer &packet, enum UdpPrctl::Type type,
-		       uint16_t index) noexcept
-    : _data(nullptr), _size(0), _alloc_size(0)
+Serializer::Serializer(const Serializer &packet, enum UdpPrctl::Type type, uint16_t index) noexcept
+	: Serializer()
 {
 	UdpPrctl header(type, packet._size, index);
 	auto &p = header.getNativeHandle();
@@ -33,7 +40,7 @@ Serializer::Serializer(const Serializer &packet, enum UdpPrctl::Type type,
 }
 
 Serializer::Serializer(const Serializer &packet) noexcept
-    : _data(nullptr), _size(0), _alloc_size(0)
+	: Serializer()
 {
 	nativeSet(packet._data, packet._size);
 }
@@ -172,8 +179,7 @@ bool Serializer::set(const sf::Vector2f &v) noexcept
 
 bool Serializer::set(const sfs::Sprite &sprite) noexcept
 {
-	return set(sprite.getOffset()) && set(sprite.getScale())
-	       && nativeSet(sprite.getRotation());
+	return set(sprite.getOffset()) && set(sprite.getScale()) && nativeSet(sprite.getRotation());
 }
 
 bool Serializer::get(sf::Vector2f &v) noexcept
@@ -197,7 +203,7 @@ bool Serializer::get(sfs::Sprite &sprite) noexcept
 
 bool Serializer::set(const sfs::Velocity &velocity) noexcept
 {
-	return set(velocity.getSpeed()) && set(velocity.getAcceleration());
+	return set(velocity.speed) && set(velocity.acceleration);
 }
 
 bool Serializer::get(sfs::Velocity &velocity) noexcept
@@ -207,8 +213,8 @@ bool Serializer::get(sfs::Velocity &velocity) noexcept
 
 	if (!get(speed) || !get(acceleration))
 		return false;
-	velocity.setAcceleration(acceleration);
-	velocity.setSpeed(speed);
+	velocity.acceleration = acceleration;
+	velocity.speed = speed;
 	return true;
 }
 

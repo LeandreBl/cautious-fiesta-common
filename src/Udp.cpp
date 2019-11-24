@@ -43,7 +43,7 @@ UdpPrctl::UdpPrctl(const udpHeader &header) noexcept
 bool UdpPrctl::isCorrect() const noexcept
 {
 	return _header.magic == UDP_MAGIC
-	       && _header.type <= static_cast<uint32_t>(UdpPrctl::Type::UNKNOWN);
+	       && _header.type <= static_cast<uint32_t>(UdpPrctl::Type::ACK);
 }
 
 UdpPrctl::Type UdpPrctl::getType() const noexcept
