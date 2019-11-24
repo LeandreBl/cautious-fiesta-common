@@ -17,14 +17,21 @@
 namespace cf {
 class Serializer {
       public:
+	Serializer(Serializer &other, size_t len) noexcept;
 	Serializer() noexcept;
 	Serializer(UdpPrctl &header) noexcept;
 	Serializer(const Serializer &packet) noexcept;
 	Serializer(const Serializer &packet, TcpPrctl::Type type) noexcept;
 	Serializer(const Serializer &packet, UdpPrctl::Type type, uint16_t index) noexcept;
 	~Serializer() noexcept;
+	Serializer splice(size_t len) noexcept;
 	void clear() noexcept;
 	void setHeader(TcpPrctl::Type type) noexcept;
+	template <typename T> Serializer &operator<<(const T &object) noexcept
+	{
+		set(object);
+		return *this;
+	}
 	bool set(const std::string &str) noexcept;
 	bool set(const TcpPrctl &header) noexcept;
 	bool set(const Asset &asset) noexcept;
@@ -44,6 +51,11 @@ class Serializer {
 	template <typename T> bool set(const T &nativeObject) noexcept
 	{
 		return nativeSet(nativeObject);
+	}
+	template <typename T> Serializer &operator>>(T &object) noexcept
+	{
+		get(object);
+		return *this;
 	}
 	bool get(const Asset &asset) noexcept;
 	bool get(std::string &str) noexcept;
@@ -82,12 +94,12 @@ class Serializer {
 	{
 		return nativeSet(&obj, sizeof(obj));
 	}
+	void shift(size_t from) noexcept;
 
       private:
 	int8_t *_data;
 	size_t _size;
 	size_t _alloc_size;
 	int resizeForNewElement(size_t newElementSize) noexcept;
-	void shift(size_t from) noexcept;
 };
 } // namespace cf

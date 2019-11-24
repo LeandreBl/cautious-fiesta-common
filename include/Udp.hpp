@@ -74,9 +74,9 @@ class UdpPrctl {
 		int32_t weaponType;
 	};
 
-	enum class objType {
+	enum class spawnType {
 		PLAYER = 0,
-		WALL,
+		OBSTACLE,
 	};
 
 	struct udpSpawnObject {

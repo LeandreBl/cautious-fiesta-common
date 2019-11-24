@@ -4,6 +4,12 @@
 #include "Serializer.hpp"
 
 namespace cf {
+Serializer::Serializer(Serializer &other, size_t len) noexcept
+	: Serializer()
+{
+	nativeSet(other.getNativeHandle(), len);
+	other.shift(len);
+}
 Serializer::Serializer() noexcept
 	: _data(nullptr)
 	, _size(0)
@@ -56,6 +62,11 @@ void Serializer::shift(size_t from) noexcept
 {
 	std::memmove(_data, _data + from, _size - from);
 	_size -= from;
+}
+
+Serializer Serializer::splice(size_t len) noexcept
+{
+	return Serializer(*this, len);
 }
 
 void Serializer::clear() noexcept
