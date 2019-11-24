@@ -40,8 +40,7 @@ Serializer::Serializer(const Serializer &packet, enum UdpPrctl::Type type, uint1
 	: Serializer()
 {
 	UdpPrctl header(type, packet._size, index);
-	auto &p = header.getNativeHandle();
-	nativeSet(p);
+	nativeSet(header.getNativeHandle());
 	nativeSet(packet._data, packet._size);
 }
 
