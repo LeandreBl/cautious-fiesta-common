@@ -36,21 +36,26 @@ class UdpPrctl {
 
 	struct udpPosition {
 		uint64_t objectId;
-		sf::Vector2f position;
-	};
+		float posx;
+		float posy;
+	} __attribute__((packed));
 
 	struct udpVelocity {
 		uint64_t objectId;
-		sf::Vector2f speed;
-		sf::Vector2f acceleration;
-	};
+		float speedx;
+		float speedy;
+		float accelerationx;
+		float accelerationy;
+	} __attribute__((packed));
 
 	struct udpSprite {
 		uint64_t objectId;
-		sf::Vector2f offset;
-		sf::Vector2f scale;
+		float offsetx;
+		float offsety;
+		float scalex;
+		float scaley;
 		float rotation;
-	};
+	} __attribute__((packed));
 
 	enum class weaponType {
 		NONE = -1,
@@ -68,11 +73,14 @@ class UdpPrctl {
 		float attack;
 		float attackSpeed;
 		float armor;
-		sf::Color color;
+		uint8_t color_r;
+		uint8_t color_g;
+		uint8_t color_b;
+		uint8_t color_a;
 		size_t spriteLen;
 		char *spriteName;
 		int32_t weaponType;
-	};
+	} __attribute__((packed));
 
 	enum class spawnType {
 		PLAYER = 0,
@@ -83,7 +91,7 @@ class UdpPrctl {
 		int32_t type;
 		uint64_t objectId;
 		// extra data depending on type
-	};
+	} __attribute__((packed));
 
 	enum class inputType {
 		UNKNOWN_KEY = -1,
@@ -100,7 +108,7 @@ class UdpPrctl {
 		int32_t action;
 		int32_t type;
 		// extra data depending on type and/or action
-	};
+	} __attribute__((packed));
 
 	enum class timeType {
 		REALTIME = 0,
@@ -110,7 +118,7 @@ class UdpPrctl {
 	struct udpTime {
 		int32_t type;
 		// extra data depending on type
-	};
+	} __attribute__((packed));
 
 	enum class stateType {
 
@@ -120,7 +128,7 @@ class UdpPrctl {
 		int32_t type;
 		uint64_t objectId;
 		// extra data depending on type;
-	};
+	} __attribute__((packed));
 
 	enum class destroyType {
 		GAMEOBJECT = 0,
@@ -130,13 +138,13 @@ class UdpPrctl {
 	struct udpDestroy {
 		int32_t type;
 		uint64_t objectId;
-	};
+	} __attribute__((packed));
 
 	enum class attackType { DEFAULT = 0, SPECIAL };
 
 	struct udpAttack {
 		int32_t attackType;
-	};
+	} __attribute__((packed));
 
 	UdpPrctl(Type type = Type::UNKNOWN, uint32_t length = 0, uint16_t index = 0) noexcept;
 	UdpPrctl(const udpHeader &header) noexcept;
