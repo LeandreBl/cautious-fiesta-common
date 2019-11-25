@@ -74,10 +74,15 @@ class Serializer {
 	size_t get(const Asset &asset) const noexcept;
 	size_t get(std::string &str) const noexcept;
 	size_t get(void *dest, size_t len) const noexcept;
+	size_t get(size_t offset, void *dest, size_t len) const noexcept;
 	size_t get(sf::Vector2f &v) const noexcept;
 	size_t get(sfs::Sprite &sprite) const noexcept;
 	size_t get(sfs::Velocity &velocity) const noexcept;
 	size_t get(sf::Color &color) const noexcept;
+	template <typename T> size_t get(size_t offset, T &dest) const noexcept
+	{
+		return get(offset, &dest, sizeof(dest));
+	}
 	template <typename T> size_t get(T &dest) const noexcept
 	{
 		return get(&dest, sizeof(dest));

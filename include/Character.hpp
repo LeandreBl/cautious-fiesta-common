@@ -11,7 +11,7 @@ class Character
 		float attack = 0;
 		float attackSpeed = 0;
 		float armor = 0;
-	};
+	} __attribute__ ((packed));
 	Character() noexcept {
 		_name = "noName";
 	};

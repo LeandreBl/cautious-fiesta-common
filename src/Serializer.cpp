@@ -156,7 +156,13 @@ size_t Serializer::set(const sf::Color &color) noexcept
 
 size_t Serializer::get(sf::Color &color) const noexcept
 {
-	return get(color.r) + get(color.g) + get(color.b) + get(color.a);
+	size_t size;
+
+	size = get(color.r);
+	size += get(size, color.g);
+	size += get(size, color.b);
+	size += get(size, color.a);
+	return size;
 }
 
 size_t Serializer::get(std::string &str) const noexcept
@@ -170,12 +176,17 @@ size_t Serializer::get(std::string &str) const noexcept
 	return size;
 }
 
+size_t Serializer::get(size_t offset, void *dest, size_t len) const noexcept
+{
+	if (_size < len + offset)
+		return 0;
+	std::memcpy(dest, _data + offset, len);
+	return len;
+}
+
 size_t Serializer::get(void *dest, size_t len) const noexcept
 {
-	if (_size < len)
-		return 0;
-	std::memcpy(dest, _data, len);
-	return len;
+	return get(0, dest, len);
 }
 
 void *Serializer::getNativeHandle() const noexcept
@@ -227,7 +238,10 @@ size_t Serializer::get(bool &value) const noexcept
 
 size_t Serializer::get(sf::Vector2f &v) const noexcept
 {
-	return get(v.x) + get(v.y);
+	size_t size = get(v.x);
+
+	size += get(size, v.y);
+	return size;
 }
 
 size_t Serializer::get(sfs::Sprite &sprite) const noexcept
@@ -235,7 +249,10 @@ size_t Serializer::get(sfs::Sprite &sprite) const noexcept
 	float rotation;
 	sf::Vector2f scale;
 	sf::Vector2f offset;
-	size_t size = get(offset) + get(scale) + get(rotation);
+	size_t size = get(offset);
+
+	size += get(size, scale);
+	size += get(size, rotation);
 
 	sprite.setOffset(offset);
 	sprite.setScale(scale);
@@ -254,7 +271,8 @@ size_t Serializer::get(sfs::Velocity &velocity) const noexcept
 	sf::Vector2f acceleration;
 	size_t size;
 
-	size = get(speed) + get(acceleration);
+	size = get(speed);
+	size += get(size, acceleration);
 	velocity.acceleration = acceleration;
 	velocity.speed = speed;
 	return size;
