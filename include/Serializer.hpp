@@ -19,7 +19,7 @@ class Serializer {
       public:
 	Serializer(Serializer &other, size_t len) noexcept;
 	Serializer() noexcept;
-	Serializer(UdpPrctl &header) noexcept;
+	Serializer(const UdpPrctl &header) noexcept;
 	Serializer(const Serializer &packet) noexcept;
 	Serializer(const Serializer &packet, TcpPrctl::Type type) noexcept;
 	Serializer(const Serializer &packet, UdpPrctl::Type type, uint16_t index) noexcept;
@@ -87,6 +87,7 @@ class Serializer {
 	{
 		return get(&dest, sizeof(dest));
 	}
+	size_t set(const Serializer &serializer) noexcept;
 	size_t set(bool value) noexcept;
 	size_t set(const std::string &str) noexcept;
 	size_t set(const UdpPrctl &header) noexcept;

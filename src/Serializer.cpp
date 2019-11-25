@@ -22,7 +22,7 @@ Serializer::~Serializer() noexcept
 	delete[] _data;
 }
 
-Serializer::Serializer(UdpPrctl &header) noexcept
+Serializer::Serializer(const UdpPrctl &header) noexcept
 	: Serializer()
 {
 	nativeSet(header);
@@ -154,6 +154,11 @@ size_t Serializer::set(const sf::Color &color) noexcept
 	return nativeSet(color.r) + nativeSet(color.g) + nativeSet(color.b) + nativeSet(color.a);
 }
 
+size_t Serializer::set(const Serializer &serializer) noexcept
+{
+	return nativeSet(serializer._data, serializer._size);
+}
+
 size_t Serializer::get(sf::Color &color) const noexcept
 {
 	size_t size;
@@ -241,6 +246,7 @@ size_t Serializer::get(sf::Vector2f &v) const noexcept
 	size_t size = get(v.x);
 
 	size += get(size, v.y);
+	std::cout << size << std::endl;
 	return size;
 }
 
