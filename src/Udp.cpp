@@ -2,29 +2,68 @@
 
 namespace cf {
 
-static const char *TYPE_STRINGS[] = {
-	"Udp::Position", "Udp::Velocity", "Udp::Sprite", "Udp::Spawn",   "Udp::Input", "Udp::Time",
-	"Udp::State",    "Udp::Destroy",  "Udp::Attack", "Udp::Unknown", "Udp::Ack",
-};
-
-static const char *INPUT_TYPES_STRINGS[] = {
-	"Input::UnknownKey", "Attack1", "Attack2", "Up", "Left", "Down", "Right"};
-
-static const char *INPUT_ACTION_STRINGS[] = {"Pressed", "Released"};
-
 const char *toString(UdpPrctl::Type type) noexcept
 {
-	return TYPE_STRINGS[static_cast<int>(type)];
+	switch (type) {
+	case UdpPrctl::Type::POSITION:
+		return "Udp::Position";
+	case UdpPrctl::Type::VELOCITY:
+		return "Udp::Velocity";
+	case UdpPrctl::Type::SPRITE:
+		return "Udp::Sprite";
+	case UdpPrctl::Type::SPAWN:
+		return "Udp::Spawn";
+	case UdpPrctl::Type::INPUT:
+		return "Udp::Input";
+	case UdpPrctl::Type::TIME:
+		return "Udp::Time";
+	case UdpPrctl::Type::STATE:
+		return "Udp::State";
+	case UdpPrctl::Type::DESTROY:
+		return "Udp::Destroy";
+	case UdpPrctl::Type::ATTACK:
+		return "Udp::Attack";
+	case UdpPrctl::Type::UNKNOWN:
+		return "Udp::Unknown";
+	case UdpPrctl::Type::ACK:
+		return "Udp::Ack";
+	default:
+		return "<not handled>";
+	}
 }
 
 const char *toString(UdpPrctl::inputType type) noexcept
 {
-	return INPUT_TYPES_STRINGS[static_cast<int>(type) + 1];
+	switch (type) {
+	case UdpPrctl::inputType::UNKNOWN_KEY:
+		return "Udp::inputType::UnknownKey";
+	case UdpPrctl::inputType::ATTACK1:
+		return "Udp::inputType::Attack1";
+	case UdpPrctl::inputType::ATTACK2:
+		return "Udp::inputType::Attack2";
+	case UdpPrctl::inputType::UP:
+		return "Udp::inputType::Up";
+	case UdpPrctl::inputType::LEFT:
+		return "Udp::inputType::Left";
+	case UdpPrctl::inputType::DOWN:
+		return "Udp::inputType::Down";
+	case UdpPrctl::inputType::RIGHT:
+		return "Udp::inputType::Right";
+	default:
+		return "<not handled>";
+	}
 }
 
 const char *toString(UdpPrctl::inputAction action) noexcept
 {
-	return INPUT_ACTION_STRINGS[static_cast<int>(action)];
+	switch (action) {
+	case UdpPrctl::inputAction::PRESSED:
+		return "Udp::inputAction::Pressed";
+	case UdpPrctl::inputAction::RELEASED:
+		return "Udp::inputAction::Released";
+	default:
+		return "<not handled>";
+	}
 }
 
 UdpPrctl::UdpPrctl(UdpPrctl::Type type, uint32_t length, uint16_t index) noexcept
