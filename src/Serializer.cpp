@@ -57,6 +57,13 @@ void Serializer::setHeader(TcpPrctl::Type type) noexcept
 	forceSetFirst(header);
 }
 
+size_t Serializer::get(UdpPrctl &header) const noexcept
+{
+	auto &p = header.getNativeHandle();
+
+	return get(p);
+}
+
 void Serializer::shift(size_t from) noexcept
 {
 	std::memmove(_data, _data + from, _size - from);
@@ -88,22 +95,31 @@ int Serializer::resizeForNewElement(size_t newElementSize) noexcept
 	return 0;
 }
 
-bool Serializer::set(const std::string &str) noexcept
+size_t Serializer::nativeSet(const void *data, size_t len) noexcept
+{
+	if (resizeForNewElement(len) == -1)
+		return false;
+	std::memcpy(_data + _size, data, len);
+	_size += len;
+	return len;
+}
+
+size_t Serializer::set(const std::string &str) noexcept
 {
 	uint64_t len = (uint64_t)str.length();
 
-	return nativeSet(len) && nativeSet(str.c_str(), len);
+	return nativeSet(len) + nativeSet(str.c_str(), len);
 }
 
-bool Serializer::set(const Asset &asset) noexcept
+size_t Serializer::set(const Asset &asset) noexcept
 {
 	std::ifstream file(asset.getFileName(), std::ios::binary);
+	size_t rsize = 0;
 
 	if (!file.is_open())
-		return false;
-	if (!nativeSet(asset.getFileSize()) || !set(asset.getFileName())
-	    || !nativeSet(asset.getChksum()))
-		return false;
+		return 0;
+	rsize = nativeSet(asset.getFileSize()) + set(asset.getFileName())
+		+ nativeSet(asset.getChksum());
 	if (reserve(asset.getFileSize()) != 0)
 		return false;
 	for (uint64_t size = 0; size < asset.getFileSize(); ++size) {
@@ -111,52 +127,55 @@ bool Serializer::set(const Asset &asset) noexcept
 		std::streamsize rd;
 		rd = file.readsome(buffer, sizeof(buffer));
 		if (rd <= 0)
-			return false;
-		if (!nativeSet(buffer, rd))
-			return false;
+			return rsize;
+		rsize += nativeSet(buffer, rd);
 		size += rd;
 	}
 	file.close();
-	return true;
+	return rsize;
 }
 
-bool Serializer::set(const TcpPrctl &header) noexcept
+size_t Serializer::set(const UdpPrctl &header) noexcept
 {
-	const auto data = header.getNativeHandle();
+	const auto &data = header.getNativeHandle();
 
 	return nativeSet(data);
 }
 
-bool Serializer::set(const sf::Color &color) noexcept
+size_t Serializer::set(const TcpPrctl &header) noexcept
 {
-	return nativeSet(color.r) && nativeSet(color.g) && nativeSet(color.b) && nativeSet(color.a);
+	const auto &data = header.getNativeHandle();
+
+	return nativeSet(data);
 }
 
-bool Serializer::get(sf::Color &color) noexcept
+size_t Serializer::set(const sf::Color &color) noexcept
 {
-	return get(color.r) && get(color.g) && get(color.b) && get(color.a);
+	return nativeSet(color.r) + nativeSet(color.g) + nativeSet(color.b) + nativeSet(color.a);
 }
 
-bool Serializer::get(std::string &str) noexcept
+size_t Serializer::get(sf::Color &color) const noexcept
+{
+	return get(color.r) + get(color.g) + get(color.b) + get(color.a);
+}
+
+size_t Serializer::get(std::string &str) const noexcept
 {
 	size_t len;
+	size_t size;
 
-	if (get(len) == false)
-		return false;
-	if (_size < len)
-		return false;
-	str.assign((char *)_data, len);
-	shift(len);
-	return true;
+	size = get(len);
+	str.assign((char *)_data + size, len);
+	size += len;
+	return size;
 }
 
-bool Serializer::get(void *dest, size_t len) noexcept
+size_t Serializer::get(void *dest, size_t len) const noexcept
 {
 	if (_size < len)
-		return false;
+		return 0;
 	std::memcpy(dest, _data, len);
-	shift(len);
-	return true;
+	return len;
 }
 
 void *Serializer::getNativeHandle() const noexcept
@@ -182,50 +201,63 @@ size_t Serializer::getSize() const noexcept
 	return _size;
 }
 
-bool Serializer::set(const sf::Vector2f &v) noexcept
+size_t Serializer::set(bool value) noexcept
 {
-	return nativeSet(v.x) && nativeSet(v.y);
+	uint8_t b = value;
+	return set(b);
 }
 
-bool Serializer::set(const sfs::Sprite &sprite) noexcept
+size_t Serializer::set(const sf::Vector2f &v) noexcept
 {
-	return set(sprite.getOffset()) && set(sprite.getScale()) && nativeSet(sprite.getRotation());
+	return nativeSet(v.x) + nativeSet(v.y);
 }
 
-bool Serializer::get(sf::Vector2f &v) noexcept
+size_t Serializer::set(const sfs::Sprite &sprite) noexcept
 {
-	return get(v.x) && get(v.y);
+	return set(sprite.getOffset()) + set(sprite.getScale()) + nativeSet(sprite.getRotation());
 }
 
-bool Serializer::get(sfs::Sprite &sprite) noexcept
+size_t Serializer::get(bool &value) const noexcept
+{
+	uint8_t b;
+	auto ret = get(b);
+	value = b;
+	return ret;
+}
+
+size_t Serializer::get(sf::Vector2f &v) const noexcept
+{
+	return get(v.x) + get(v.y);
+}
+
+size_t Serializer::get(sfs::Sprite &sprite) const noexcept
 {
 	float rotation;
 	sf::Vector2f scale;
 	sf::Vector2f offset;
+	size_t size = get(offset) + get(scale) + get(rotation);
 
-	if (!get(offset) || !get(scale) || !get(rotation))
-		return false;
 	sprite.setOffset(offset);
 	sprite.setScale(scale);
 	sprite.setRotation(rotation);
-	return true;
+	return size;
 }
 
-bool Serializer::set(const sfs::Velocity &velocity) noexcept
+size_t Serializer::set(const sfs::Velocity &velocity) noexcept
 {
-	return set(velocity.speed) && set(velocity.acceleration);
+	return set(velocity.speed) + set(velocity.acceleration);
 }
 
-bool Serializer::get(sfs::Velocity &velocity) noexcept
+size_t Serializer::get(sfs::Velocity &velocity) const noexcept
 {
 	sf::Vector2f speed;
 	sf::Vector2f acceleration;
+	size_t size;
 
-	if (!get(speed) || !get(acceleration))
-		return false;
+	size = get(speed) + get(acceleration);
 	velocity.acceleration = acceleration;
 	velocity.speed = speed;
-	return true;
+	return size;
 }
 
 } // namespace cf

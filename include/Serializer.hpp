@@ -27,46 +27,21 @@ class Serializer {
 	Serializer splice(size_t len) noexcept;
 	void clear() noexcept;
 	void setHeader(TcpPrctl::Type type) noexcept;
-	template <typename T> Serializer &operator<<(const T &object) noexcept
-	{
-		set(object);
-		return *this;
-	}
-	bool set(const std::string &str) noexcept;
-	bool set(const TcpPrctl &header) noexcept;
-	bool set(const Asset &asset) noexcept;
-	bool set(const sf::Vector2f &v) noexcept;
-	bool set(const sfs::Sprite &sprite) noexcept;
-	bool set(const sfs::Velocity &velocity) noexcept;
-	bool set(const sf::Color &color) noexcept;
-	template <typename T> bool set(const std::vector<T> &vec)
-	{
-		if (!nativeSet(vec.size()))
-			return false;
-		for (auto &&i : vec)
-			if (!set(i))
-				return false;
-		return true;
-	}
-	template <typename T> bool set(const T &nativeObject) noexcept
-	{
-		return nativeSet(nativeObject);
-	}
-	template <typename T> Serializer &operator>>(T &object) noexcept
+	template <typename T> Serializer &operator>>=(T &object) noexcept
 	{
 		get(object);
 		return *this;
 	}
-	bool get(const Asset &asset) noexcept;
-	bool get(std::string &str) noexcept;
-	bool get(void *dest, size_t len) noexcept;
-	bool get(sf::Vector2f &v) noexcept;
-	bool get(sfs::Sprite &sprite) noexcept;
-	bool get(sfs::Velocity &velocity) noexcept;
-	bool get(sf::Color &color) noexcept;
-	template <typename T> bool get(T &dest) noexcept
+	template <typename T> Serializer &operator>>(T &object) noexcept
 	{
-		return get(&dest, sizeof(dest));
+		size_t size = get(object);
+		shift(size);
+		return *this;
+	}
+	template <typename T> Serializer &operator<<(const T &object) noexcept
+	{
+		set(object);
+		return *this;
 	}
 	void *getNativeHandle() const noexcept;
 	bool forceSize(size_t newSize) noexcept;
@@ -82,21 +57,51 @@ class Serializer {
 	int reserve(uint64_t size) noexcept;
 	size_t getSize() const noexcept;
 
-	bool nativeSet(const void *data, size_t len) noexcept
-	{
-		if (resizeForNewElement(len) == -1)
-			return false;
-		std::memcpy(_data + _size, data, len);
-		_size += len;
-		return true;
-	}
-	template <typename T> bool nativeSet(const T &obj) noexcept
+	size_t nativeSet(const void *data, size_t len) noexcept;
+	template <typename T> size_t nativeSet(const T &obj) noexcept
 	{
 		return nativeSet(&obj, sizeof(obj));
+	}
+	template <typename T> void shift(const T &object) noexcept
+	{
+		shift(sizeof(object));
 	}
 	void shift(size_t from) noexcept;
 
       private:
+	size_t get(UdpPrctl &header) const noexcept;
+	size_t get(bool &value) const noexcept;
+	size_t get(const Asset &asset) const noexcept;
+	size_t get(std::string &str) const noexcept;
+	size_t get(void *dest, size_t len) const noexcept;
+	size_t get(sf::Vector2f &v) const noexcept;
+	size_t get(sfs::Sprite &sprite) const noexcept;
+	size_t get(sfs::Velocity &velocity) const noexcept;
+	size_t get(sf::Color &color) const noexcept;
+	template <typename T> size_t get(T &dest) const noexcept
+	{
+		return get(&dest, sizeof(dest));
+	}
+	size_t set(bool value) noexcept;
+	size_t set(const std::string &str) noexcept;
+	size_t set(const UdpPrctl &header) noexcept;
+	size_t set(const TcpPrctl &header) noexcept;
+	size_t set(const Asset &asset) noexcept;
+	size_t set(const sf::Vector2f &v) noexcept;
+	size_t set(const sfs::Sprite &sprite) noexcept;
+	size_t set(const sfs::Velocity &velocity) noexcept;
+	size_t set(const sf::Color &color) noexcept;
+	template <typename T> size_t set(const std::vector<T> &vec)
+	{
+		size_t size = nativeSet(vec.size());
+		for (auto &&i : vec)
+			size += set(i);
+		return size;
+	}
+	template <typename T> size_t set(const T &nativeObject) noexcept
+	{
+		return nativeSet(nativeObject);
+	}
 	int8_t *_data;
 	size_t _size;
 	size_t _alloc_size;
