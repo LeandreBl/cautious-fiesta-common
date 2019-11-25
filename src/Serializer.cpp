@@ -246,7 +246,6 @@ size_t Serializer::get(sf::Vector2f &v) const noexcept
 	size_t size = get(v.x);
 
 	size += get(size, v.y);
-	std::cout << size << std::endl;
 	return size;
 }
 
