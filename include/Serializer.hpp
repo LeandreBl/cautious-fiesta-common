@@ -17,8 +17,8 @@
 namespace cf {
 class Serializer {
       public:
-	Serializer(Serializer &other, size_t len) noexcept;
 	Serializer() noexcept;
+	Serializer(Serializer &other, size_t len) noexcept;
 	Serializer(const UdpPrctl &header) noexcept;
 	Serializer(const Serializer &packet) noexcept;
 	Serializer(const Serializer &packet, TcpPrctl::Type type) noexcept;
@@ -67,6 +67,7 @@ class Serializer {
 		shift(sizeof(object));
 	}
 	void shift(size_t from) noexcept;
+	void dump() const noexcept;
 
       private:
 	size_t get(UdpPrctl &header) const noexcept;

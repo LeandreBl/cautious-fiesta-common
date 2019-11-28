@@ -36,7 +36,7 @@ Serializer::Serializer(const Serializer &packet, TcpPrctl::Type type) noexcept
 	nativeSet(packet._data, packet._size);
 }
 
-Serializer::Serializer(const Serializer &packet, enum UdpPrctl::Type type, uint16_t index) noexcept
+Serializer::Serializer(const Serializer &packet, UdpPrctl::Type type, uint16_t index) noexcept
 	: Serializer()
 {
 	UdpPrctl header(type, packet._size, index);
@@ -281,6 +281,20 @@ size_t Serializer::get(sfs::Velocity &velocity) const noexcept
 	velocity.acceleration = acceleration;
 	velocity.speed = speed;
 	return size;
+}
+
+void Serializer::dump() const noexcept
+{
+	for (size_t i = 0; i < _size; ++i) {
+		char c = _data[i];
+		std::cout << '[';
+		if (isalpha(c))
+			std::cout << c;
+		else
+			std::cout << (int)c;
+		std::cout << "] ";
+	}
+	std::cout << std::endl;
 }
 
 } // namespace cf
