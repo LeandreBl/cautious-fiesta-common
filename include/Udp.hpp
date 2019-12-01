@@ -7,13 +7,16 @@
 #include <SFML/System.hpp>
 #include <SFML/Graphics.hpp>
 
-namespace cf {
+namespace cf
+{
 
 constexpr uint16_t UDP_MAGIC = 0x0b3a;
 
-class UdpPrctl {
-      public:
-	enum class Type {
+class UdpPrctl
+{
+public:
+	enum class Type
+	{
 		POSITION,
 		VELOCITY,
 		SPRITE,
@@ -27,20 +30,23 @@ class UdpPrctl {
 		ACK /* this should stay last */
 	};
 
-	struct udpHeader {
+	struct udpHeader
+	{
 		uint32_t type;   // packet type
 		uint32_t length; // packet payload length
 		uint16_t magic;  // packet magic number
 		uint16_t index;  // packet index
 	} __attribute__((packed));
 
-	struct udpPosition {
+	struct udpPosition
+	{
 		uint64_t objectId;
 		float posx;
 		float posy;
 	} __attribute__((packed));
 
-	struct udpVelocity {
+	struct udpVelocity
+	{
 		uint64_t objectId;
 		float speedx;
 		float speedy;
@@ -48,7 +54,8 @@ class UdpPrctl {
 		float accelerationy;
 	} __attribute__((packed));
 
-	struct udpSprite {
+	struct udpSprite
+	{
 		uint64_t objectId;
 		float offsetx;
 		float offsety;
@@ -57,7 +64,8 @@ class UdpPrctl {
 		float rotation;
 	} __attribute__((packed));
 
-	enum class weaponType {
+	enum class weaponType
+	{
 		NONE = -1,
 		DAGGER = 0,
 		GUN,
@@ -65,7 +73,8 @@ class UdpPrctl {
 		SWORD,
 	};
 
-	struct udpPlayerObject {
+	struct udpPlayerObject
+	{
 		size_t nameLen;
 		char *name;
 		float life;
@@ -82,18 +91,30 @@ class UdpPrctl {
 		int32_t weaponType;
 	} __attribute__((packed));
 
-	enum class spawnType {
+	struct udpWeaponObject
+	{
+		uint64_t playerId;
+		int32_t weaponType;
+		uint64_t spriteNameLen;
+		char *spriteName;
+	} __attribute__((packed));
+
+	enum class spawnType
+	{
 		PLAYER = 0,
 		OBSTACLE,
+		WEAPON,
 	};
 
-	struct udpSpawnObject {
+	struct udpSpawnObject
+	{
 		int32_t type;
 		uint64_t objectId;
 		// extra data depending on type
 	} __attribute__((packed));
 
-	enum class inputType {
+	enum class inputType
+	{
 		UNKNOWN_KEY = -1,
 		ATTACK1 = 0,
 		ATTACK2,
@@ -102,48 +123,66 @@ class UdpPrctl {
 		DOWN,
 		RIGHT,
 	};
-	enum class inputAction { PRESSED = 0, RELEASED };
+	enum class inputAction
+	{
+		PRESSED = 0,
+		RELEASED
+	};
 
-	struct udpInput {
+	struct udpInput
+	{
 		int32_t action;
 		int32_t type;
 		// extra data depending on type and/or action
 	} __attribute__((packed));
 
-	enum class timeType {
+	enum class timeType
+	{
 		REALTIME = 0,
 		TIMESCALE,
 	};
 
-	struct udpTime {
+	struct udpTime
+	{
 		int32_t type;
 		// extra data depending on type
 	} __attribute__((packed));
 
-	enum class stateType {
+	enum class stateType
+	{
 
 	};
 
-	struct udpSetState {
+	struct udpSetState
+	{
 		int32_t type;
 		uint64_t objectId;
 		// extra data depending on type;
 	} __attribute__((packed));
 
-	enum class destroyType {
+	enum class destroyType
+	{
 		GAMEOBJECT = 0,
 		COMPONENT,
 	};
 
-	struct udpDestroy {
+	struct udpDestroy
+	{
 		int32_t type;
 		uint64_t objectId;
 	} __attribute__((packed));
 
-	enum class attackType { DEFAULT = 0, SPECIAL };
+	enum class attackType
+	{
+		DEFAULT = 0,
+		SPECIAL
+	};
 
-	struct udpAttack {
+	struct udpAttack
+	{
 		int32_t attackType;
+		float vecx;
+		float vecy;
 	} __attribute__((packed));
 
 	UdpPrctl(Type type = Type::UNKNOWN, uint32_t length = 0, uint16_t index = 0) noexcept;
@@ -155,7 +194,7 @@ class UdpPrctl {
 	udpHeader &getNativeHandle() noexcept;
 	const udpHeader &getNativeHandle() const noexcept;
 
-      protected:
+protected:
 	udpHeader _header;
 };
 
