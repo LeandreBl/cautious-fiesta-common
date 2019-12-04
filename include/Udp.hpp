@@ -117,6 +117,11 @@ class UdpPrctl {
 		// extra data depending on type
 	} __attribute__((packed));
 
+	struct inputAttack {
+		float vx;
+		float vy;
+	};
+
 	enum class inputType {
 		UNKNOWN_KEY = -1,
 		ATTACK1 = 0,
