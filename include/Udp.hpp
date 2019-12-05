@@ -99,10 +99,8 @@ class UdpPrctl {
 	struct udpProjectileObject {
 		float posx;
 		float posy;
-		float speedx;
-		float speedy;
-		float accelx;
-		float accely;
+		float angle;
+		float speed;
 		uint8_t color_r;
 		uint8_t color_g;
 		uint8_t color_b;
@@ -173,8 +171,7 @@ class UdpPrctl {
 
 	struct udpAttack {
 		int32_t attackType;
-		float vecx;
-		float vecy;
+		float angle;
 	} __attribute__((packed));
 
 	UdpPrctl(Type type = Type::UNKNOWN, uint32_t length = 0, uint16_t index = 0) noexcept;
