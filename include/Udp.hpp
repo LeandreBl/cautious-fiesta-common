@@ -116,8 +116,8 @@ class UdpPrctl {
 	} __attribute__((packed));
 
 	struct inputAttack {
-		float vx;
-		float vy;
+		int32_t vx;
+		int32_t vy;
 	};
 
 	enum class inputType {
@@ -165,6 +165,7 @@ class UdpPrctl {
 	struct udpDestroy {
 		int32_t type;
 		uint64_t objectId;
+		// optionnal uint64_t component id
 	} __attribute__((packed));
 
 	enum class attackType { DEFAULT = 0, SPECIAL };
