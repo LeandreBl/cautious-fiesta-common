@@ -11,5 +11,6 @@ namespace cf
            std::vector<sf::IntRect> getFrames() const noexcept {return _frames;};
         protected:
             std::vector<sf::IntRect> _frames;
+            std::string _spritePath;
     };
 }
