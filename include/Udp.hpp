@@ -91,6 +91,14 @@ public:
 		int32_t weaponType;
 	} __attribute__((packed));
 
+	struct udpEnnemyObject
+	{
+		size_t nameLen;
+		char *name;
+		size_t spriteLen;
+		char *spriteName;
+	} __attribute__((packed));
+
 	struct udpWeaponObject
 	{
 		uint64_t playerId;
@@ -102,10 +110,10 @@ public:
 	enum class spawnType
 	{
 		PLAYER = 0,
-		ENNEMY,
 		OBSTACLE,
 		WEAPON,
 		PROJECTILE,
+		ENNEMY,
 	};
 
 	struct udpProjectileObject
