@@ -180,8 +180,13 @@ public:
 
 	enum class stateType
 	{
-
+		SETLIFE = 0
 	};
+
+	struct PlayerLife
+	{
+		float life;
+	} __attribute__((packed));
 
 	struct udpSetState
 	{
