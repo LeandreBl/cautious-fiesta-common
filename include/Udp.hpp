@@ -187,7 +187,7 @@ public:
 	struct PlayerLife
 	{
 		float life;
-		int kills;
+		float kills;
 	} __attribute__((packed));
 
 	struct udpSetState
